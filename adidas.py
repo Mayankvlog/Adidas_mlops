@@ -106,3 +106,7 @@ elif page == "Visualization":
     st.subheader("Pie Plot:")
     pie_fig = px.pie(adidas_data, names='Sales Category')
     st.plotly_chart(pie_fig)
+
+
+# Set MLflow Tracking URI
+st.markdown("[DAGsHub Repository](https://dagshub.com/Mayankvlog/Adidas_mlops.mlflow)")
