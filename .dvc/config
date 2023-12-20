@@ -1,4 +1,5 @@
 [core]
     autostage = true
+    remote = origin
 ['remote "origin"']
-    url = https://dagshub.com/Mayankvlog/Adidas_mlops.s3
+    url = https://dagshub.com/Mayankvlog/Adidas_mlops.dvc
