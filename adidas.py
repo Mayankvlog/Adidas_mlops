@@ -2,8 +2,11 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from PIL import Image
 import mlflow
 import mlflow.sklearn
@@ -43,16 +46,29 @@ df = user_input_features()
 st.subheader('User Input Parameters')
 st.write(df)
 
-# Initialize a RandomForestClassifier
-clf = RandomForestClassifier()
+# Classifiers
+classifiers = {
+    'Random Forest': RandomForestClassifier(),
+    'K-Nearest Neighbors': KNeighborsClassifier(),
+    'Logistic Regression': LogisticRegression(),
+    'Support Vector Machine (SVM)': SVC()
+}
+
+# User selects a classifier
+selected_classifier = st.sidebar.selectbox('Select Classifier', list(classifiers.keys()))
+
+# Initialize the selected classifier
+clf = classifiers[selected_classifier]
 
 # Train the classifier (assuming 'Sales Category' is the target column)
 X = adidas_data[['Price per Unit', 'Units Sold']]
 y = adidas_data['Sales Category']
-clf.fit(X, y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+clf.fit(X_train, y_train)
 
 # Log parameters to MLflow
 with mlflow.start_run():
+    mlflow.log_param("Classifier", selected_classifier)
     mlflow.log_param("Price per Unit", df['Price per Unit'].values[0])
     mlflow.log_param("Units Sold", df['Units Sold'].values[0])
 
@@ -76,21 +92,21 @@ if page == "Home":
 
 elif page == "Model Evaluation":
     st.title("Model Evaluation Page")
-    st.write("Evaluate the performance of the RandomForestClassifier.")
-
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    st.write(f"Evaluate the performance of {selected_classifier}.")
 
     # Evaluate the model
     y_pred = clf.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     class_rep = classification_report(y_test, y_pred)
+    conf_matrix = confusion_matrix(y_test, y_pred)
 
     # Display evaluation results
     st.subheader("Model Evaluation Results:")
     st.write(f"Accuracy: {accuracy}")
     st.write("Classification Report:")
     st.write(class_rep)
+    st.write("Confusion Matrix:")
+    st.write(conf_matrix)
 
 elif page == "Visualization":
     st.title("Visualization Page")
@@ -101,12 +117,25 @@ elif page == "Visualization":
     scatter_fig = px.scatter(adidas_data, x='Units Sold', y='Total Sales', color='Sales Category', size='Price per Unit')
     st.plotly_chart(scatter_fig)
 
+    # Violin Plot
+    st.subheader("Violin Plot:")
+    violin_fig = px.violin(adidas_data, y='Total Sales', box=True, points='all', color='Sales Category')
+    st.plotly_chart(violin_fig)
+
+    # Bar Plot
+    st.subheader("Bar Plot:")
+    bar_fig = px.bar(adidas_data, x='Sales Category', y='Total Sales', color='Sales Category')
+    st.plotly_chart(bar_fig)
+
+    # Line plot
+    st.subheader("Line Plot:")
+    line_fig = px.line(adidas_data, x='Date', y='Total Sales', color='Sales Category')
+    st.plotly_chart(line_fig)
 
     # Pie plot
     st.subheader("Pie Plot:")
     pie_fig = px.pie(adidas_data, names='Sales Category')
     st.plotly_chart(pie_fig)
-
 
 # Set MLflow Tracking URI
 st.markdown("[DAGsHub Repository](https://dagshub.com/Mayankvlog/Adidas_mlops.mlflow)")
