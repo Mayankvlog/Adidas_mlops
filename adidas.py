@@ -129,7 +129,7 @@ elif page == "Visualization":
 
     # Line plot
     st.subheader("Line Plot:")
-    line_fig = px.line(adidas_data, x='State', y='Total Sales', color='Sales Category')
+    line_fig = px.line(adidas_data, x='Retailer', y='Total Sales', color='Sales Category')
     st.plotly_chart(line_fig)
 
     # Pie plot
