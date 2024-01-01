@@ -3,11 +3,13 @@ Application Elements
 Client Information
 
 
-Change sliders in the sidebar to enter boundaries like 'Cost per Unit' and 'Units Sold'.
+Change sliders in the sidebar to enter boundaries 
+like 'Cost per Unit' and 'Units Sold'.
 
 
 Model Forecast
-Select a classifier from the sidebar (Random Forest, K-Nearest Neighbors, Logistic Regression, Support Vector Machine).
+Select a classifier from the sidebar (Random Forest, K-Nearest Neighbors, L
+ogistic Regression, Support Vector Machine).
 
 
 Anticipated deals classification is shown in light of client input.
@@ -17,7 +19,8 @@ MLOps Coordination
 MLflow is utilized for model following.
 Prepared models are logged with boundaries and forecasts.
 Model Assessment
-Change to the "Model Assessment" page to see exactness, grouping report, and disarray framework.
+Change to the "Model Assessment" page to see exactness, grouping
+report, and disarray framework.
 Perception
 Change to the "Perception" page to investigate representations of the Adidas dataset.
 
