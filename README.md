@@ -1,6 +1,6 @@
-Application Elements
+#   Application Elements
 
-Client Information
+#  Client Information
 
 
 Change sliders in the sidebar to enter boundaries 
