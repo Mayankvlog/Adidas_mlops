@@ -1,1 +1,34 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+
+      # Set up Python environment
+      - run:
+          name: Set up Python environment
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+
+      # Install dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            pip install -r requirements.txt
+
+      # Run Streamlit app
+      - run:
+          name: Run Streamlit app
+          command: streamlit run your_streamlit_app.py
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
 
