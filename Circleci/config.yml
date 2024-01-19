@@ -24,7 +24,7 @@ jobs:
       # Run Streamlit app
       - run:
           name: Run Streamlit app
-          command: streamlit run your_streamlit_app.py
+          command: streamlit run adidas.py
 
 workflows:
   version: 2
