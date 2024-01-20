@@ -61,6 +61,6 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - master
           paths:
             - /tmp/artifacts/test_results.txt
