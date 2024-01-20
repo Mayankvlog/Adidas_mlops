@@ -38,11 +38,6 @@ jobs:
           # This assumes pytest is installed via the install-package step above
           command: pytest
           
-      # Add artifacts
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - artifacts
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
