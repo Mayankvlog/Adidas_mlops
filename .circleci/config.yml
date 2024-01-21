@@ -44,14 +44,6 @@ jobs:
           path: /path/to/artifacts
           destination: artifacts
 
-      
-      # Deployment
-      - run:
-          name: Deploy to Server
-          command: |
-            # Add your deployment commands here
-            echo "Deploying to the server..."
-      
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -59,8 +51,4 @@ workflows:
   test: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build-and-test:
-          # Run the deployment step only if the build-and-test job succeeds
-          requires:
-            - build-and-test
-
+      - build-and-test
