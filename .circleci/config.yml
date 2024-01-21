@@ -31,23 +31,14 @@ jobs:
       #- store_artifacts:
        #   path: /tmp/artifacts
           
-     deploy:
-       docker:
-          - image: cimg/python:3.11
-       steps:
-          - run: echo "Deploying to production server"
+     #deploy:
+      # docker:
+       #   - image: cimg/python:3.11
+       #steps:
+        #  - run: echo "Deploying to production server"
 
 
 workflows:
-  build-and-test: 
+  test: 
     jobs:
-      - build
-      - test
-           requires:
-            - build 
-      - deploy:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
+      - build-and- test
