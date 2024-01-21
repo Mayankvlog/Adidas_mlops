@@ -28,7 +28,7 @@ jobs:
 
       - store_artifacts:
           path: /tmp/art-1
-           destination: artifact-file
+           destination: .circleci
       - store_artifacts:
           path: /tmp/artifacts
           
