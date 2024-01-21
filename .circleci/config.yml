@@ -38,6 +38,12 @@ jobs:
           # This assumes pytest is installed via the install-package step above
           command: pytest
 
+      
+      # Add artifacts
+      - store_artifacts:
+          path: /path/to/artifacts
+          destination: artifacts
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -46,6 +52,7 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build-and-test
+
 
       
    
