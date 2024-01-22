@@ -1,0 +1,66 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.5.0
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.10.2
+
+    working_directory: /tmp
+
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          name: Install Streamlit dependencies
+          command: |
+            pip install streamlit pandas plotly scikit-learn mlflow
+
+      - run:
+          name: Run tests
+          command: |
+            python -m unittest discover tests/
+
+      - run:
+          name: Creating Dummy Artifacts
+          command: |
+            echo "my artifact file" > /tmp/art-1;
+            mkdir /tmp/artifacts;
+            echo "my artifact files in a dir" > /tmp/artifacts/art-2;
+
+      - store_artifacts:
+          path: /tmp/art-1
+          destination: artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+          destination: artifacts
+
+  deploy:
+    docker:
+      - image: cimg/python:3.11
+
+    steps:
+      - run:
+          name: Deploy to Production
+          command: |
+            # Add your deployment commands here
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - main
