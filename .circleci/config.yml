@@ -8,7 +8,7 @@ jobs:
     docker:
       - image: cimg/python:3.10.2
 
-    working_directory: /tmp
+    working_directory: ~/repo
 
     steps:
       - checkout
@@ -24,19 +24,19 @@ jobs:
           command: |
             python -m unittest discover tests/
 
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/art-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/art-2;
+      #- run:
+       #   name: Creating Dummy Artifacts
+       #   command: |
+            #echo "my artifact file" > /tmp/art-1;
+            #mkdir /tmp/artifacts;
+           # echo "my artifact files in a dir" > /tmp/artifacts/art-2;
 
       - store_artifacts:
-          path: /tmp/art-1
-          destination: artifacts
-      - store_artifacts:
-          path: /tmp/artifacts
-          destination: artifacts
+          path: .coverage
+          destination: coverage
+      #- store_artifacts:
+       #   path: /tmp/artifacts
+       #   destination: artifacts
 
   deploy:
     docker:
