@@ -5,6 +5,7 @@ orbs:
 
 jobs:
   build-and-test:
+  unit-test:
     docker:
       - image: cimg/python:3.10.2
 
