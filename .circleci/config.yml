@@ -28,10 +28,10 @@ jobs:
 
       - store_artifacts:
           path: /tmp/art-1
-           destination: artifacts/
+           #destination: artifacts/
       - store_artifacts:
           path: /tmp/artifacts
-           destination: artifacts/
+           #destination: artifacts/
 
 workflows:
   test: 
