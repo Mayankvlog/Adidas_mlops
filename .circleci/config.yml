@@ -28,7 +28,7 @@ jobs:
 
       - store_artifacts:
           path: /tmp/art-1
-           destination: artifacts-file
+           #destination: artifacts-file
       - store_artifacts:
           path: /tmp/artifacts
            #destination: artifacts-file
