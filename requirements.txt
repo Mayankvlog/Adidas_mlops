@@ -4,6 +4,3 @@ Pillow
 plotly
 scikit_learn
 streamlit
-openpyxl
-pytest
-unittest==0.0
