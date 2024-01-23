@@ -1,4 +1,3 @@
-
 version: 2.1
 
 jobs:
@@ -26,6 +25,23 @@ jobs:
           paths:
             - models/
 
+  deploy:
+    docker:
+      - image: python:3.8
+
+    working_directory: /app
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /app
+
+      - run:
+          name: Deploy to Production
+          command: |
+            # Add deployment commands here
+            # e.g., deploy your app using a specific script or command
+
 workflows:
   version: 2
   build_and_deploy:
@@ -42,10 +58,4 @@ workflows:
             branches:
               only:
                 - master
-          steps:
-            - checkout
-            - run:
-                name: Deploy to Production
-                command: |
-                  # Add deployment commands here
-                  # e.g., deploy your app using a specific script or command
+
