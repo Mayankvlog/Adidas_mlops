@@ -1,66 +1,51 @@
+
 version: 2.1
 
-orbs:
-  python: circleci/python@1.5.0
-
 jobs:
-  build-and-test:
+  build:
     docker:
-      - image: cimg/python:3.10.2
+      - image: python:3.8
 
-    working_directory: ~/repo
+    working_directory: /app
 
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
+
       - run:
-          name: Install Streamlit dependencies
+          name: Install dependencies
           command: |
-            pip install streamlit pandas plotly scikit-learn mlflow
+            pip install -r requirements.txt
 
       - run:
           name: Run tests
           command: |
             python -m unittest discover tests/
 
-      #- run:
-       #   name: Creating Dummy Artifacts
-       #   command: |
-            #echo "my artifact file" > /tmp/art-1;
-            #mkdir /tmp/artifacts;
-           # echo "my artifact files in a dir" > /tmp/artifacts/art-2;
-
-      - store_artifacts:
-          path: .coverage
-          destination: coverage
-      #- store_artifacts:
-       #   path: /tmp/artifacts
-       #   destination: artifacts
-
-  deploy:
-    docker:
-      - image: cimg/python:3.11
-
-    steps:
-      - run:
-          name: Deploy to Production
-          command: |
-            # Add your deployment commands here
+      - persist_to_workspace:
+          root: /app
+          paths:
+            - models/
 
 workflows:
   version: 2
-  test-and-deploy:
+  build_and_deploy:
     jobs:
-      - build-and-test:
+      - build:
           filters:
             branches:
               only:
                 - master
       - deploy:
           requires:
-            - build-and-test
+            - build
           filters:
             branches:
               only:
                 - master
+          steps:
+            - checkout
+            - run:
+                name: Deploy to Production
+                command: |
+                  # Add deployment commands here
+                  # e.g., deploy your app using a specific script or command
