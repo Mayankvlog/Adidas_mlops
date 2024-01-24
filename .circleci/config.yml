@@ -19,7 +19,7 @@ jobs:
           name: Run tests
           command: |
             #streamlit run python -m unittest discover tests/
-            streamlit run main.py &
+            streamlit run adidas.py &
             python -m unittest discover tests/
 
 
@@ -60,7 +60,7 @@ jobs:
           name: Run tests
           command: |
             #streamlit run python -m unittest discover tests/
-            streamlit run main.py &
+            streamlit run adidas.py &
             python -m unittest discover tests/
 
 
