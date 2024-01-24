@@ -9,7 +9,7 @@ jobs:
     docker:
       - image: cimg/python:3.10.2
 
-    working_directory: /tmp
+    working_directory: /app
     
     steps:
       - checkout
@@ -18,21 +18,13 @@ jobs:
       - run:
           name: Run tests
           command: pytest
-          
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            echo "my artifact file" > /tmp/art-1;
-            mkdir /tmp/artifacts;
-            echo "my artifact files in a dir" > /tmp/artifacts/art-2;
 
-      - store_artifacts:
-          path: /tmp/art-1
-           #destination: artifacts/
-      - store_artifacts:
-          path: /tmp/artifacts
-           #destination: artifacts/
+      - persist_to_workspace:
+          root: /app
+          paths:
+            - models/
 
+     
 workflows:
   test: 
     jobs:
