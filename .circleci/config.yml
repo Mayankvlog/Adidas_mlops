@@ -18,12 +18,14 @@ jobs:
       - run:
           name: Run tests
           command: |
+            #streamlit run python -m unittest discover tests/
+            streamlit run main.py &
             python -m unittest discover tests/
 
-      - persist_to_workspace:
-          root: /app
-          paths:
-            - models/
+
+      - store_artifacts:
+          path: /app/models
+          destination: /artifacts
 
   deploy:
     docker:
@@ -33,8 +35,6 @@ jobs:
 
     steps:
       - checkout
-      - attach_workspace:
-          at: /app
 
       - run:
           name: Deploy to Production
@@ -42,20 +42,53 @@ jobs:
             # Add deployment commands here
             # e.g., deploy your app using a specific script or command
 
+  test_and_deploy:
+    docker:
+      - image: python:3.8
+
+    working_directory: /app
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            pip install -r requirements.txt
+
+      - run:
+          name: Run tests
+          command: |
+            #streamlit run python -m unittest discover tests/
+            streamlit run main.py &
+            python -m unittest discover tests/
+
+
+      - run:
+          name: Deploy to Production
+          command: |
+            # Add deployment commands here
+            # e.g., deploy your app using a specific script or command
+
+      - persist_to_workspace:
+          root: /app
+          paths:
+            - models/
+
+
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build:
+      - test_and_deploy:
           filters:
             branches:
               only:
                 - master
       - deploy:
           requires:
-            - build
+            - test_and_deploy
           filters:
             branches:
               only:
                 - master
-
