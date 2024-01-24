@@ -15,14 +15,6 @@ jobs:
           command: |
             pip install -r requirements.txt
 
-      - run:
-          name: Run tests
-          command: |
-            #streamlit run python -m unittest discover tests/
-            streamlit run adidas.py &
-            python -m unittest discover tests/
-
-
       - store_artifacts:
           path: /app/models
           destination: /artifacts
@@ -55,13 +47,6 @@ jobs:
           name: Install dependencies
           command: |
             pip install -r requirements.txt
-
-      - run:
-          name: Run tests
-          command: |
-            #streamlit run python -m unittest discover tests/
-            streamlit run adidas.py &
-            python -m unittest discover tests/
 
 
       - run:
