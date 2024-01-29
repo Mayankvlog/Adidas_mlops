@@ -10,6 +10,12 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from PIL import Image
 import mlflow
 import mlflow.sklearn
+import logging 
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+
 
 # Load Adidas dataset
 adidas_data = pd.read_excel('data/Adidas US Sales Datasets.xlsx')
@@ -77,6 +83,11 @@ with mlflow.start_run():
 
     # Log parameters (since prediction is a category)
     mlflow.log_param("prediction", prediction[0])
+
+
+    # Log to file using logging
+    logging.info(f"Prediction: {prediction[0]}")
+
 
     # Display prediction
     st.subheader('Prediction')
