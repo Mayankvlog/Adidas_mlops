@@ -1,127 +1,54 @@
 version: 2.1
-
 jobs:
   build:
     docker:
-      - image: python:3.8
-
-    working_directory: /app
-
+      - image: cimg/python:3.8
+ 
     steps:
       - checkout
 
+      # Install dependencies
       - run:
-          name: Install dependencies
+          name: Install Dependencies
           command: |
             pip install -r requirements.txt
 
+      # Run pytest and store results
       - run:
-          name: Run tests and generate JUnit XML report
+          name: Run Tests
           command: |
-            pytest --junitxml=/app/test-report/test-results.xml
-            coverage run -m unittest discover tests/
-            coverage html -d coverage_html
-
-      - persist_to_workspace:
-          root: /app
-          paths:
-            - models/
-            - coverage_html/
-            - test-report/
+            pytest -v --junitxml=test-results/junit.xml
+      - store_test_results:
+          path: test-results
 
   deploy:
     docker:
-      - image: python:3.8
-
-    working_directory: /app
-
+      - image: cimg/python:3.8
     steps:
       - checkout
-
+      - setup_remote_docker:
+          docker_layer_caching: True
       - run:
-          name: Deploy to Production
+          name: Build docker image 
           command: |
-            # Add deployment commands here
-            # e.g., deploy your app using a specific script or command
-
-  test_and_deploy:
-    docker:
-      - image: python:3.8
-
-    working_directory: /app
-
-    steps:
-      - checkout
-
-      - run:
-          name: Install dependencies
-          command: |
-            pip install -r requirements.txt
-
-      - run:
-          name: Deploy to Production
-          command: |
-            # Add deployment commands here
-            # e.g., deploy your app 
-
-  create_dummy_artifacts:
-    docker: 
-      - image: alpine
-
-    working_directory: /dummy
-
-    steps:
-      - run:
-          name: Creating Dummy Artifacts
-          command: |
-            mkdir -p /dummy/artifacts
-            echo "Dummy Artifact Content" > /dummy/artifacts/dummy.txt
-
-  merge_results:
-    docker:
-      - image: python:3.8
-
-    working_directory: /app
-
-    steps:
-      - attach_workspace:
-          at: /app
-
-      - run:
-          name: Merge Test Results
-          command: |
-            mkdir -p /app/test-report
-            find /app -name 'test-results*.xml' -exec cat {} + > /app/test-report/all-results.xml
-
-      - store_test_results:
-          path: /app/test-report
-
+            docker build -t adidasapp -t mayank035/adidasapp:latest .
+            echo $DOCKERHUB_PASSWORD | docker login -u mayank035 --password-stdin
+            docker push mayank035/adidasapp:latest            
 workflows:
   version: 2
-  build_and_test:
+  build_and_deploy:
     jobs:
-      - test_and_deploy:
+      - build:
           filters:
             branches:
               only:
                 - master
+          post-steps:
+            - store_artifacts:
+                path: test-results
       - deploy:
           requires:
-            - test_and_deploy
-          filters:
-            branches:
-              only:
-                - master
-      - create_dummy_artifacts:  
-          requires:
-            - test_and_deploy
-          filters:
-            branches:
-              only:
-                - master
-      - merge_results:
-          requires:
-            - test_and_deploy
+            - build
           filters:
             branches:
               only:
